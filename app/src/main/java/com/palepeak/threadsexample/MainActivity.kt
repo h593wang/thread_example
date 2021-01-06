@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
@@ -37,8 +38,9 @@ class MainActivity : AppCompatActivity() {
     data class ListEntries(val entry1: String, val entry2: String, var switched: Boolean = false)
 
     private fun getData() = liveData(Dispatchers.IO) {
-        val data = fetchDataSlow()
-        emit(data)
+        val data1 = lifecycleScope.async(Dispatchers.IO) { fetchDataSlow() }
+        val data2 = lifecycleScope.async(Dispatchers.IO) { fetchDataSlow() }
+        emit(data1.await() + data2.await())
     }
 
 
