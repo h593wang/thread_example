@@ -4,7 +4,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
@@ -29,17 +33,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        getData()
-
+        getData().observe(this, Observer {
+            recyclerView.adapter = MyAdapter(it)
+        })
     }
 
     data class ListEntries(val entry1: String, val entry2: String, var switched: Boolean = false)
 
-    private fun getData() = lifecycleScope.launch(Dispatchers.IO) {
-        val data = fetchDataSlow()
-        recyclerView.post {
-            recyclerView.adapter = MyAdapter(data)
+    private fun getData(): LiveData<List<ListEntries>> {
+        val resultLiveData = MutableLiveData<List<ListEntries>>()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val data = fetchDataSlow()
+            resultLiveData.postValue(data)
         }
+
+        return resultLiveData
     }
 
 
