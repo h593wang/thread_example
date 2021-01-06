@@ -3,6 +3,7 @@ package com.palepeak.kotlinexample
 import android.R.attr.delay
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,11 +17,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Handler().let {
+        Handler(Looper.getMainLooper()).let {
             it.post(object : Runnable {
                 override fun run() {
-                    counter+=1
                     textView3.text = counter.toString()
+                    counter+=1
                     it.postDelayed(this, 1000)
                 }
             })
