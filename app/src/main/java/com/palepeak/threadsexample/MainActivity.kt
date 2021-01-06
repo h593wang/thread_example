@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,13 +29,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = MyAdapter(getData())
+        getData()
 
     }
 
     data class ListEntries(val entry1: String, val entry2: String, var switched: Boolean = false)
 
-    fun getData() = fetchDataSlow()
+    private fun getData() = lifecycleScope.launch(Dispatchers.IO) {
+        val data = fetchDataSlow()
+        recyclerView.post {
+            recyclerView.adapter = MyAdapter(data)
+        }
+    }
+
 
     fun fetchDataSlow(): List<ListEntries> {
         Thread.sleep(5000)
