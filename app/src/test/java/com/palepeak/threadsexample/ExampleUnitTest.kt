@@ -1,4 +1,4 @@
-package com.palepeak.kotlinexample
+package com.palepeak.threadsexample
 
 import org.junit.Test
 

@@ -1,13 +1,11 @@
-package com.palepeak.kotlinexample
+package com.palepeak.threadsexample
 
-import android.R.attr.delay
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
